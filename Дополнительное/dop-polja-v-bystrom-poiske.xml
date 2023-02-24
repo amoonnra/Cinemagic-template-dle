@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dleplugin>
+	<name>Доп. поля в быстром поиске</name>
+	<description></description>
+	<icon></icon>
+	<version></version>
+	<dleversion>13</dleversion>
+	<versioncompare>greater</versioncompare>
+	<upgradeurl></upgradeurl>
+	<filedelete>0</filedelete>
+	<needplugin></needplugin>
+	<mnotice>0</mnotice>
+	<mysqlinstall><![CDATA[]]></mysqlinstall>
+	<mysqlupgrade><![CDATA[]]></mysqlupgrade>
+	<mysqlenable><![CDATA[]]></mysqlenable>
+	<mysqldisable><![CDATA[]]></mysqldisable>
+	<mysqldelete><![CDATA[]]></mysqldelete>
+	<phpinstall><![CDATA[]]></phpinstall>
+	<phpupgrade><![CDATA[]]></phpupgrade>
+	<phpenable><![CDATA[]]></phpenable>
+	<phpdisable><![CDATA[]]></phpdisable>
+	<phpdelete><![CDATA[]]></phpdelete>
+	<notice><![CDATA[]]></notice>
+	<file name="engine/ajax/search.php">
+		<operation action="replace">
+			<searchcode><![CDATA[date, alt_name, category]]></searchcode>
+			<replacecode><![CDATA[date, alt_name, category, xfields]]></replacecode>
+			<searchcount>1</searchcount>
+		</operation>
+		<operation action="after">
+			<searchcode><![CDATA[while($row = $db->get_row()){]]></searchcode>
+			<replacecode><![CDATA[$xfieldsdata = xfieldsdataload( $row['xfields'] );]]></replacecode>
+			<searchcount>1</searchcount>
+		</operation>
+		<operation action="before">
+			<searchcode><![CDATA[$buffer .= "<a href=\"" . $full_link . "\"><span class=\"searchheading\">" . stripslashes( $title ) . "</span>";]]></searchcode>
+			<replacecode><![CDATA[if($xfieldsdata['year']) $year = ", {$xfieldsdata['year']} ";
+		else $year = "";]]></replacecode>
+		</operation>
+		<operation action="replace">
+			<searchcode><![CDATA[$buffer .= "<a href=\"" . $full_link . "\"><span class=\"searchheading\">" . stripslashes( $title ) . "</span>";
+
+		$buffer .= "<span>".$description."</span></a>";]]></searchcode>
+			<replacecode><![CDATA[$buffer .= "<a href=\"" . $full_link . "\"><img src=\"/uploads/posts/".$xfieldsdata['poster']."\" class=\"searcpposter\">";
+
+	    $buffer .= "<span class=\"searchheading\">" . stripslashes( $title ) ."</span>";
+        $buffer .= "<span class=\"searchheading_en\">".$xfieldsdata['title_en']. $year ."</span>";
+		$buffer .= "<span class=\"searchddescr\">".$description."</span></a>";]]></replacecode>
+		</operation>
+	</file>
+</dleplugin>
